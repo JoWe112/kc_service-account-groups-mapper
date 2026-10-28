@@ -8,7 +8,9 @@ This is the changelog of the Keycloak 26.8 line (`keycloak-26.8`, tags `v26.8.x`
 
 ## [Unreleased]
 
-First release of the Keycloak 26.8 line; to be tagged `v26.8.0`.
+## [26.8.0] - 2026-10-28
+
+First release of the Keycloak 26.8 line.
 
 ### Added
 - `oidc-service-account-groups-mapper` protocol mapper ("Service account groups (via linked user)")
@@ -22,3 +24,6 @@ First release of the Keycloak 26.8 line; to be tagged `v26.8.0`.
   integration test against `quay.io/keycloak/keycloak:26.8.1` + OpenLDAP (#14).
 - `Keycloak-Version` manifest entry recording the Keycloak version the JAR was built for.
 - Release versions follow the Keycloak line: `26.8.<patch>`, tags `v26.8.<patch>` (#16).
+
+[Unreleased]: https://github.com/JoWe112/kc_service-account-groups-mapper/compare/v26.8.0...HEAD
+[26.8.0]: https://github.com/JoWe112/kc_service-account-groups-mapper/releases/tag/v26.8.0
