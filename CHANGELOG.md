@@ -8,6 +8,10 @@ This is the changelog of the Keycloak 26.6 line (`main`, tags `v26.6.x`).
 
 ## [Unreleased]
 
+### Changed
+- Dependabot also proposes version updates for the `keycloak-26.8` branch, with the same
+  Keycloak-line ignore rules (#22).
+
 ## [26.6.0] - 2026-10-28
 
 First release of the Keycloak 26.6 line.
