@@ -16,6 +16,20 @@ Keycloak protocol mapper that adds groups from a linked federated (LDAP) user to
 | Class | `it.westlund.keycloak.mappers.ServiceAccountGroupsMapper` |
 | Target | Keycloak 26.6.x, Java 21 |
 
+## Supported Keycloak versions
+
+Each Keycloak minor line has its own branch and release series. The mapper code is the same;
+only the Keycloak (and server-provided) dependency versions and the integration-test image differ.
+
+| Branch | Keycloak | Releases | Built and tested against |
+|---|---|---|---|
+| `main` | 26.6.x | `v26.6.x` | 26.6.4 |
+| `keycloak-26.8` | 26.8.x | `v26.8.x` | 26.8.1 |
+
+Deploy the JAR from the release that matches your server. The JAR manifest records both the
+release (`Implementation-Version`) and the Keycloak version it was built against
+(`Keycloak-Version`).
+
 ## Project overview
 
 A client using the **Client Credentials** flow authenticates as its *service account*, which is
@@ -303,6 +317,19 @@ classDiagram
 | `ServiceAccountGroupsMapper` | Mapper factory and instance: admin-UI config, service-account gating, LDAP provider selection, cache, fail closed/open, claim output |
 | `LinkedUserGroupResolver` | Search, `federationLink` filtering, ambiguity check, group names/paths |
 | `TtlCache` | Bounded thread-safe TTL cache |
+
+## Versioning and releases
+
+Versions are `<Keycloak major>.<Keycloak minor>.<patch>`:
+
+- The first two numbers name the Keycloak line the JAR is built for (`26.6`, `26.8`). They
+  follow Keycloak, not the mapper's own API, so they deviate from strict SemVer.
+- The patch number counts mapper releases on that line. It starts at `0` and is independent of
+  Keycloak's patch version (e.g. `26.6.1` can still target Keycloak 26.6.4).
+- Breaking changes to the mapper's configuration are called out in the CHANGELOG.
+
+Each release is tagged on its branch as `v<version>` (`v26.6.0` on `main`, `v26.8.0` on
+`keycloak-26.8`). Bump the pom version and the CHANGELOG in the same PR as the change.
 
 ## License
 
