@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  JAVA_VERSION: "21"
+  KEYCLOAK_IMAGE: quay.io/keycloak/keycloak:26.6.4
+  LDAP_IMAGE: osixia/openldap:1.5.0
+
+jobs:
+  changes:
+    name: changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      java: ${{ steps.filter.outputs.java }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            java:
+              - 'pom.xml'
+              - 'src/**'
+              - 'it/**'
+              - '.github/workflows/ci.yml'
+
+  build:
+    name: build
+    needs: changes
+    if: needs.changes.outputs.java == 'true' || github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: maven
+      - name: Build and unit test
+        run: mvn -B package
+      - name: Check JAR contents (service file present, no Keycloak classes)
+        run: |
+          JAR=target/kc_service-account-groups-mapper.jar
+          unzip -l "$JAR"
+          unzip -p "$JAR" META-INF/services/org.keycloak.protocol.ProtocolMapper | grep -qx 'it.westlund.keycloak.mappers.ServiceAccountGroupsMapper'
+          if unzip -l "$JAR" | grep -q 'org/keycloak/'; then echo "JAR contains Keycloak classes"; exit 1; fi
+      - name: Integration test (Keycloak + OpenLDAP)
+        run: it/run-it.sh

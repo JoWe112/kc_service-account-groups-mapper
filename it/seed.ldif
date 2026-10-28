@@ -1,0 +1,57 @@
+# Seed data for the integration test (base dc=example,dc=org).
+# OpenLDAP's default schema has no oauthClientID attribute, so the test stores the client id
+# in employeeType and maps it to the Keycloak attribute oauthClientID. That also exercises
+# Keycloak's translation from the user-model attribute name to the LDAP attribute name.
+
+dn: ou=people,dc=example,dc=org
+objectClass: organizationalUnit
+ou: people
+
+dn: ou=groups,dc=example,dc=org
+objectClass: organizationalUnit
+ou: groups
+
+dn: uid=svc-billing,ou=people,dc=example,dc=org
+objectClass: inetOrgPerson
+uid: svc-billing
+cn: svc-billing
+sn: billing
+employeeType: billing-service
+
+dn: uid=svc-dup-1,ou=people,dc=example,dc=org
+objectClass: inetOrgPerson
+uid: svc-dup-1
+cn: svc-dup-1
+sn: dup
+employeeType: dup-service
+
+dn: uid=svc-dup-2,ou=people,dc=example,dc=org
+objectClass: inetOrgPerson
+uid: svc-dup-2
+cn: svc-dup-2
+sn: dup
+employeeType: dup-service
+
+dn: uid=svc-dupopen-1,ou=people,dc=example,dc=org
+objectClass: inetOrgPerson
+uid: svc-dupopen-1
+cn: svc-dupopen-1
+sn: dup
+employeeType: dup-open-service
+
+dn: uid=svc-dupopen-2,ou=people,dc=example,dc=org
+objectClass: inetOrgPerson
+uid: svc-dupopen-2
+cn: svc-dupopen-2
+sn: dup
+employeeType: dup-open-service
+
+dn: cn=billing-readers,ou=groups,dc=example,dc=org
+objectClass: groupOfNames
+cn: billing-readers
+member: uid=svc-billing,ou=people,dc=example,dc=org
+
+dn: cn=billing-writers,ou=groups,dc=example,dc=org
+objectClass: groupOfNames
+cn: billing-writers
+member: uid=svc-billing,ou=people,dc=example,dc=org
