@@ -8,8 +8,8 @@ security vulnerabilities.
 
 | Version | Keycloak | Supported |
 |---|---|---|
-| 1.x (`main`) | 26.6.x | Yes |
-| 1.x (`keycloak-26.8`) | 26.8.x | Yes |
+| 26.6.x (`main`) | 26.6.x | Yes |
+| 26.8.x (`keycloak-26.8`) | 26.8.x | Yes |
 
 ## Reporting a vulnerability
 

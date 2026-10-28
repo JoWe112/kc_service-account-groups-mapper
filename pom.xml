@@ -6,7 +6,8 @@
 
     <groupId>it.westlund.keycloak</groupId>
     <artifactId>kc_service-account-groups-mapper</artifactId>
-    <version>1.0.0</version>
+    <!-- <Keycloak major>.<Keycloak minor>.<mapper patch>; see README "Versioning and releases". -->
+    <version>26.8.0</version>
     <packaging>jar</packaging>
 
     <name>Keycloak service account groups mapper</name>
@@ -130,7 +131,7 @@
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                         </manifest>
                         <manifestEntries>
-                            <!-- The Keycloak line this JAR was built and tested against. -->
+                            <!-- The Keycloak version this JAR was built and tested against. -->
                             <Keycloak-Version>${keycloak.version}</Keycloak-Version>
                         </manifestEntries>
                     </archive>
