@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Build for Keycloak 26.8.x on branch `keycloak-26.8` (Keycloak 26.8.1, test-only RESTEasy
+  6.2.19.Final); CI and the integration test run against `quay.io/keycloak/keycloak:26.8.1` (#14).
+- `Keycloak-Version` manifest entry recording the Keycloak line the JAR was built for.
+
 ### Changed
 - Dependabot proposes only patch updates for Keycloak artifacts and the server-provided
   libraries (`jakarta.ws.rs-api`, `resteasy-core`, `jboss-logging`) to stay on Keycloak 26.6.x (#9).
