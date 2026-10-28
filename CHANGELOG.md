@@ -8,7 +8,9 @@ This is the changelog of the Keycloak 26.6 line (`main`, tags `v26.6.x`).
 
 ## [Unreleased]
 
-First release of the Keycloak 26.6 line; to be tagged `v26.6.0`.
+## [26.6.0] - 2026-10-28
+
+First release of the Keycloak 26.6 line.
 
 ### Added
 - `oidc-service-account-groups-mapper` protocol mapper ("Service account groups (via linked user)")
@@ -25,3 +27,6 @@ First release of the Keycloak 26.6 line; to be tagged `v26.6.0`.
 ### Changed
 - Dependabot proposes only patch updates for Keycloak artifacts and the server-provided
   libraries (`jakarta.ws.rs-api`, `resteasy-core`, `jboss-logging`) to stay on Keycloak 26.6.x (#9).
+
+[Unreleased]: https://github.com/JoWe112/kc_service-account-groups-mapper/compare/v26.6.0...HEAD
+[26.6.0]: https://github.com/JoWe112/kc_service-account-groups-mapper/releases/tag/v26.6.0
