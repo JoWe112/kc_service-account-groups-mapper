@@ -30,7 +30,7 @@
         <junit.version>5.13.4</junit.version>
         <mockito.version>5.20.0</mockito.version>
         <!-- Same RESTEasy as Keycloak 26.6.4; only supplies a JAX-RS RuntimeDelegate to unit tests. -->
-        <resteasy.version>6.2.16.Final</resteasy.version>
+        <resteasy.version>7.0.5.Final</resteasy.version>
     </properties>
 
     <dependencies>
