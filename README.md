@@ -21,10 +21,17 @@ Keycloak protocol mapper that adds groups from a linked federated (LDAP) user to
 Each Keycloak minor line has its own branch and release series. The mapper code is the same;
 only the Keycloak (and server-provided) dependency versions and the integration-test image differ.
 
-| Branch | Keycloak | Releases | Built and tested against |
-|---|---|---|---|
-| `main` | 26.6.x | `v26.6.x` | 26.6.4 |
-| `keycloak-26.8` | 26.8.x | `v26.8.x` | 26.8.1 |
+| Branch | Keycloak | Releases | Built and tested against | Status |
+|---|---|---|---|---|
+| `keycloak-26.8` | 26.8.x | `v26.8.x` | 26.8.1 | **Recommended** |
+| `main` | 26.6.x | `v26.6.x` | 26.6.4 | Maintained, but see the warning below |
+
+> [!WARNING]
+> **Keycloak 26.6.4 has unpatched security vulnerabilities**, including a critical account
+> takeover (CVE-2026-18963, GHSA-4gv3-mc9p-5wqc). No community Keycloak 26.6.x release after
+> 26.6.4 exists, so there is no fixed 26.6 server to move to. The mapper JAR itself does not
+> contain Keycloak code; the risk is in the Keycloak server it runs in. **Run Keycloak 26.8.x
+> with mapper `v26.8.0`.** Details in [#31](https://github.com/JoWe112/kc_service-account-groups-mapper/issues/31).
 
 Deploy the JAR from the release that matches your server. The JAR manifest records both the
 release (`Implementation-Version`) and the Keycloak version it was built against
