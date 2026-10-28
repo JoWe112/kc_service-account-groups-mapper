@@ -3,7 +3,7 @@
 [![CI](https://github.com/JoWe112/kc_service-account-groups-mapper/actions/workflows/ci.yml/badge.svg)](https://github.com/JoWe112/kc_service-account-groups-mapper/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 ![Java](https://img.shields.io/badge/Java-21-orange)
-![Keycloak](https://img.shields.io/badge/Keycloak-26.6-4d4d4d)
+![Keycloak](https://img.shields.io/badge/Keycloak-26.8-4d4d4d)
 
 Keycloak protocol mapper that adds groups from a linked federated (LDAP) user to service account tokens in the Client Credentials flow.
 
@@ -14,7 +14,20 @@ Keycloak protocol mapper that adds groups from a linked federated (LDAP) user to
 | Provider ID | `oidc-service-account-groups-mapper` |
 | Admin UI name | **Service account groups (via linked user)** |
 | Class | `it.westlund.keycloak.mappers.ServiceAccountGroupsMapper` |
-| Target | Keycloak 26.6.x, Java 21 |
+| Target | Keycloak 26.8.x, Java 21 (branch `keycloak-26.8`) |
+
+## Supported Keycloak versions
+
+Each Keycloak minor line has its own branch. The mapper code is the same; only the Keycloak
+(and server-provided) dependency versions and the integration-test image differ.
+
+| Branch | Keycloak | Built and tested against |
+|---|---|---|
+| `main` | 26.6.x | 26.6.4 |
+| `keycloak-26.8` | 26.8.x | 26.8.1 |
+
+The built JAR records its Keycloak line in the manifest (`Keycloak-Version`). Deploy the JAR
+built from the branch that matches your server.
 
 ## Project overview
 
@@ -112,10 +125,10 @@ has its own cache:
   user, removed membership) show up after at most the TTL. The same applies to an LDAP outage.
   See [Error handling](#error-handling).
 
-### Deviation from the original design (Keycloak 26.6)
+### Deviation from the original design (Keycloak 26.6 and later)
 
 The original design used `session.users().searchForUserByUserAttributeStream(...)`. In Keycloak
-26.6, `UserStorageManager` wraps every storage provider query in
+26.6 and 26.8, `UserStorageManager` wraps every external storage provider query in
 `queryWithGracefulDegradation`. It **catches the LDAP exception, logs a warning and returns an
 empty result**. Through `session.users()`, "LDAP unreachable" therefore looks the same as "no
 linked user", or returns a stale local copy of an imported user. Fail closed cannot work that way.
@@ -137,7 +150,7 @@ The `federationLink` check is still applied as defense in depth.
 
 ### Requirements
 
-- Keycloak **26.6.x** (built and tested against 26.6.4)
+- Keycloak **26.8.x** (built and tested against 26.8.1). For Keycloak 26.6.x use the `main` branch.
 - Java 21 and Maven 3.9+, or Docker (see below)
 
 ### Build
@@ -228,7 +241,7 @@ curl -s -u billing-service:<secret> -d grant_type=client_credentials \
 
 ## Verifying lookup of LDAP users not yet imported into Keycloak
 
-**Short answer: they are found.** In 26.6 the LDAP provider's `searchForUserByUserAttributeStream`
+**Short answer: they are found.** In 26.6 and 26.8 the LDAP provider's `searchForUserByUserAttributeStream`
 runs an LDAP query for the attribute and imports any match that is not yet in the local database
 (`importUserFromLDAP`). No full sync is needed. The integration test proves this with a user that
 was never synced.
@@ -262,7 +275,7 @@ If the claim is missing, check these in order:
 
 ```bash
 mvn test        # 37 unit tests (cache, resolver, mapper with mocked Keycloak models)
-it/run-it.sh    # integration test: Keycloak 26.6.4 + OpenLDAP in Docker (needs target/*.jar)
+it/run-it.sh    # integration test: Keycloak 26.8.1 + OpenLDAP in Docker (needs target/*.jar)
 ```
 
 The integration test uses `cache.ttl=0`, so every request reaches LDAP. It checks these cases:

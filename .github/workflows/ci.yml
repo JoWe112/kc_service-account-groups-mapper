@@ -2,16 +2,16 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, keycloak-26.8]
   pull_request:
-    branches: [main]
+    branches: [main, keycloak-26.8]
 
 permissions:
   contents: read
 
 env:
   JAVA_VERSION: "21"
-  KEYCLOAK_IMAGE: quay.io/keycloak/keycloak:26.6.4
+  KEYCLOAK_IMAGE: quay.io/keycloak/keycloak:26.8.1
   LDAP_IMAGE: osixia/openldap:1.5.0
 
 jobs:
