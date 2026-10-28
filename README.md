@@ -66,7 +66,7 @@ sequenceDiagram
     L->>D: (&(oauthClientID=billing-service)(objectClass=...))
     D-->>L: LDAP entry
     L-->>M: UserModel (imported on demand if needed)
-    M->>M: keep only federationLink == LDAP component id; >1 = error
+    M->>M: keep users whose federationLink is the LDAP component id (more than one = error)
     M->>L: user.getGroupsStream()  (via group-ldap-mapper)
     M-->>KC: claim "groups" = [cn, ...]
     KC-->>C: access token
