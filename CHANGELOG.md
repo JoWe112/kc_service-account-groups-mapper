@@ -9,6 +9,8 @@ This is the changelog of the Keycloak 26.6 line (`main`, tags `v26.6.x`).
 ## [Unreleased]
 
 ### Changed
+- Keycloak 26.8.x is the recommended line: Keycloak 26.6.4 has unpatched upstream CVEs with no
+  community 26.6.x fix (README warning, SECURITY.md) (#31).
 - Dependabot also proposes version updates for the `keycloak-26.8` branch, with the same
   Keycloak-line ignore rules (#22).
 
