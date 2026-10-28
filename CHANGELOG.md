@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Dependabot proposes only patch updates for Keycloak artifacts and the server-provided
+  libraries (`jakarta.ws.rs-api`, `resteasy-core`, `jboss-logging`) to stay on Keycloak 26.6.x (#9).
+
 ## [1.0.0] - 2026-10-28
 
 ### Added

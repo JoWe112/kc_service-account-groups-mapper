@@ -7,6 +7,19 @@ updates:
     groups:
       keycloak:
         patterns: ["org.keycloak:*"]
+    # The mapper targets Keycloak 26.6.x. Keycloak and the libraries it ships (provided scope,
+    # or test stand-ins for them) must match the server line, so only patch updates are proposed.
+    # Moving to a newer Keycloak line is a deliberate change: bump keycloak.version and these
+    # versions together in pom.xml.
+    ignore:
+      - dependency-name: "org.keycloak:*"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "jakarta.ws.rs:jakarta.ws.rs-api"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "org.jboss.resteasy:resteasy-core"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "org.jboss.logging:jboss-logging"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
   - package-ecosystem: github-actions
     directory: /
     schedule:
