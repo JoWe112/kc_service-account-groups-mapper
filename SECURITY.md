@@ -8,8 +8,8 @@ security vulnerabilities.
 
 | Version | Keycloak | Supported |
 |---|---|---|
-| 26.8.x (`keycloak-26.8`) | 26.8.x | Yes (recommended) |
-| 26.6.x (`main`) | 26.6.x | Mapper fixes only; the Keycloak 26.6 server line has unpatched upstream CVEs ([#31](https://github.com/JoWe112/kc_service-account-groups-mapper/issues/31)) |
+| 26.8.x | 26.8.x | Yes |
+| 26.6.x | 26.6.x | No (end of life; the Keycloak 26.6 server line has unpatched upstream CVEs, [#31](https://github.com/JoWe112/kc_service-account-groups-mapper/issues/31)) |
 
 Vulnerabilities in Keycloak itself are not fixed here: the JAR contains no Keycloak code (all
 Keycloak dependencies are `provided`). Keep your Keycloak server patched, and prefer the newest
