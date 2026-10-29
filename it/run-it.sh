@@ -12,7 +12,7 @@
 # Usage: mvn package && it/run-it.sh     (requires docker, curl, python3)
 set -euo pipefail
 
-KEYCLOAK_IMAGE="${KEYCLOAK_IMAGE:-quay.io/keycloak/keycloak:26.6.4}"
+KEYCLOAK_IMAGE="${KEYCLOAK_IMAGE:-quay.io/keycloak/keycloak:26.8.1}"
 LDAP_IMAGE="${LDAP_IMAGE:-osixia/openldap:1.5.0}"
 PORT="${PORT:-18080}"
 NET=kcsagm-it

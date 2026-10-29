@@ -3,7 +3,7 @@
 [![CI](https://github.com/JoWe112/kc_service-account-groups-mapper/actions/workflows/ci.yml/badge.svg)](https://github.com/JoWe112/kc_service-account-groups-mapper/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 ![Java](https://img.shields.io/badge/Java-21-orange)
-![Keycloak](https://img.shields.io/badge/Keycloak-26.6-4d4d4d)
+![Keycloak](https://img.shields.io/badge/Keycloak-26.8-4d4d4d)
 
 Keycloak protocol mapper that adds groups from a linked federated (LDAP) user to service account tokens in the Client Credentials flow.
 
@@ -14,28 +14,29 @@ Keycloak protocol mapper that adds groups from a linked federated (LDAP) user to
 | Provider ID | `oidc-service-account-groups-mapper` |
 | Admin UI name | **Service account groups (via linked user)** |
 | Class | `it.westlund.keycloak.mappers.ServiceAccountGroupsMapper` |
-| Target | Keycloak 26.6.x, Java 21 |
+| Target | Keycloak 26.8.x, Java 21 |
 
 ## Supported Keycloak versions
 
-Each Keycloak minor line has its own branch and release series. The mapper code is the same;
-only the Keycloak (and server-provided) dependency versions and the integration-test image differ.
+`main` builds for the newest supported Keycloak line. Each release names that line in its
+version (see [Versioning and releases](#versioning-and-releases)).
 
-| Branch | Keycloak | Releases | Built and tested against | Status |
-|---|---|---|---|---|
-| `keycloak-26.8` | 26.8.x | `v26.8.x` | 26.8.1 | **Recommended** |
-| `main` | 26.6.x | `v26.6.x` | 26.6.4 | Maintained, but see the warning below |
+| Keycloak | Release | Built and tested against | Status |
+|---|---|---|---|
+| 26.8.x | [`v26.8.x`](https://github.com/JoWe112/kc_service-account-groups-mapper/releases/tag/v26.8.0) | 26.8.1 | **Supported** (`main`) |
+| 26.6.x | [`v26.6.0`](https://github.com/JoWe112/kc_service-account-groups-mapper/releases/tag/v26.6.0) | 26.6.4 | **End of life**, no further releases |
 
 > [!WARNING]
 > **Keycloak 26.6.4 has unpatched security vulnerabilities**, including a critical account
 > takeover (CVE-2026-18963, GHSA-4gv3-mc9p-5wqc). No community Keycloak 26.6.x release after
 > 26.6.4 exists, so there is no fixed 26.6 server to move to. The mapper JAR itself does not
 > contain Keycloak code; the risk is in the Keycloak server it runs in. **Run Keycloak 26.8.x
-> with mapper `v26.8.0`.** Details in [#31](https://github.com/JoWe112/kc_service-account-groups-mapper/issues/31).
+> with the latest `v26.8.x` release.** Details in [#31](https://github.com/JoWe112/kc_service-account-groups-mapper/issues/31).
 
 Deploy the JAR from the release that matches your server. The JAR manifest records both the
 release (`Implementation-Version`) and the Keycloak version it was built against
-(`Keycloak-Version`).
+(`Keycloak-Version`). The 26.6 build was kept on a separate branch until it was merged into
+`main` ([#34](https://github.com/JoWe112/kc_service-account-groups-mapper/issues/34)); its sources remain available at tag `v26.6.0`.
 
 ## Project overview
 
@@ -133,10 +134,10 @@ has its own cache:
   user, removed membership) show up after at most the TTL. The same applies to an LDAP outage.
   See [Error handling](#error-handling).
 
-### Deviation from the original design (Keycloak 26.6)
+### Deviation from the original design (Keycloak 26.6 and later)
 
 The original design used `session.users().searchForUserByUserAttributeStream(...)`. In Keycloak
-26.6, `UserStorageManager` wraps every storage provider query in
+26.6 and 26.8, `UserStorageManager` wraps every external storage provider query in
 `queryWithGracefulDegradation`. It **catches the LDAP exception, logs a warning and returns an
 empty result**. Through `session.users()`, "LDAP unreachable" therefore looks the same as "no
 linked user", or returns a stale local copy of an imported user. Fail closed cannot work that way.
@@ -158,7 +159,8 @@ The `federationLink` check is still applied as defense in depth.
 
 ### Requirements
 
-- Keycloak **26.6.x** (built and tested against 26.6.4)
+- Keycloak **26.8.x** (built and tested against 26.8.1). Keycloak 26.6.x is end of life; its last
+  build is [`v26.6.0`](https://github.com/JoWe112/kc_service-account-groups-mapper/releases/tag/v26.6.0).
 - Java 21 and Maven 3.9+, or Docker (see below)
 
 ### Build
@@ -249,7 +251,7 @@ curl -s -u billing-service:<secret> -d grant_type=client_credentials \
 
 ## Verifying lookup of LDAP users not yet imported into Keycloak
 
-**Short answer: they are found.** In 26.6 the LDAP provider's `searchForUserByUserAttributeStream`
+**Short answer: they are found.** In 26.6 and 26.8 the LDAP provider's `searchForUserByUserAttributeStream`
 runs an LDAP query for the attribute and imports any match that is not yet in the local database
 (`importUserFromLDAP`). No full sync is needed. The integration test proves this with a user that
 was never synced.
@@ -283,7 +285,7 @@ If the claim is missing, check these in order:
 
 ```bash
 mvn test        # 37 unit tests (cache, resolver, mapper with mocked Keycloak models)
-it/run-it.sh    # integration test: Keycloak 26.6.4 + OpenLDAP in Docker (needs target/*.jar)
+it/run-it.sh    # integration test: Keycloak 26.8.1 + OpenLDAP in Docker (needs target/*.jar)
 ```
 
 The integration test uses `cache.ttl=0`, so every request reaches LDAP. It checks these cases:
@@ -329,14 +331,19 @@ classDiagram
 
 Versions are `<Keycloak major>.<Keycloak minor>.<patch>`:
 
-- The first two numbers name the Keycloak line the JAR is built for (`26.6`, `26.8`). They
+- The first two numbers name the Keycloak line the JAR is built for (`26.6`, `26.8`, …). They
   follow Keycloak, not the mapper's own API, so they deviate from strict SemVer.
 - The patch number counts mapper releases on that line. It starts at `0` and is independent of
-  Keycloak's patch version (e.g. `26.6.1` can still target Keycloak 26.6.4).
+  Keycloak's patch version (e.g. `26.8.1` can still target Keycloak 26.8.4).
 - Breaking changes to the mapper's configuration are called out in the CHANGELOG.
 
-Each release is tagged on its branch as `v<version>` (`v26.6.0` on `main`, `v26.8.0` on
-`keycloak-26.8`). Bump the pom version and the CHANGELOG in the same PR as the change.
+Releases are tagged on `main` as `v<version>`; release tags are protected against moving and
+deletion. Bump the pom version and the CHANGELOG in the same PR as the change.
+
+Moving to a new Keycloak line (e.g. 26.10) is a deliberate change on `main`: bump
+`keycloak.version`, the server-provided versions (`jakarta.ws.rs-api`, `jboss-logging`, test-only
+`resteasy-core`) to what that Keycloak ships, the integration-test image, and the project version
+to `26.10.0`. Previous lines are not maintained after that.
 
 ## License
 

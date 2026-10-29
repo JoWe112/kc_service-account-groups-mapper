@@ -1,12 +1,10 @@
 version: 2
-# Each Keycloak line has its own branch (main = 26.6.x, keycloak-26.8 = 26.8.x). Dependabot reads
-# this file from the default branch only, so every branch needs its own entries (target-branch).
+# main builds for one Keycloak line (currently 26.8.x).
 #
-# Keycloak and the libraries it ships (provided scope, or test stand-ins for them) must match the
-# branch's Keycloak line, so only patch updates are proposed for them. Moving a branch to a newer
-# Keycloak line is a deliberate change: bump keycloak.version and these versions together in pom.xml.
+# Keycloak and the libraries it ships (provided scope, or test stand-ins for them) must match that
+# Keycloak line, so only patch updates are proposed for them. Moving to a newer Keycloak line is a
+# deliberate change: bump keycloak.version and these versions together in pom.xml.
 updates:
-  # --- main: Keycloak 26.6.x ---
   - package-ecosystem: maven
     directory: /
     target-branch: main
@@ -30,30 +28,3 @@ updates:
     schedule:
       interval: weekly
 
-  # --- keycloak-26.8: Keycloak 26.8.x ---
-  - package-ecosystem: maven
-    directory: /
-    target-branch: keycloak-26.8
-    schedule:
-      interval: weekly
-    commit-message:
-      prefix: "build(deps-26.8)"
-    groups:
-      keycloak:
-        patterns: ["org.keycloak:*"]
-    ignore:
-      - dependency-name: "org.keycloak:*"
-        update-types: ["version-update:semver-major", "version-update:semver-minor"]
-      - dependency-name: "jakarta.ws.rs:jakarta.ws.rs-api"
-        update-types: ["version-update:semver-major", "version-update:semver-minor"]
-      - dependency-name: "org.jboss.resteasy:resteasy-core"
-        update-types: ["version-update:semver-major", "version-update:semver-minor"]
-      - dependency-name: "org.jboss.logging:jboss-logging"
-        update-types: ["version-update:semver-major", "version-update:semver-minor"]
-  - package-ecosystem: github-actions
-    directory: /
-    target-branch: keycloak-26.8
-    schedule:
-      interval: weekly
-    commit-message:
-      prefix: "build(deps-26.8)"
